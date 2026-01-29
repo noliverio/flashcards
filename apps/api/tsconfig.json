@@ -1,5 +1,5 @@
 {
-  "extends": "@flashcards/packages/config/base.json",
+  // "extends": "@flashcards/packages/config/base.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]

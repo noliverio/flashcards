@@ -7,13 +7,17 @@
   "extends": "@flashcards/packages/config/base.json",
   "devDependencies": {
     "@types/bun": "latest",
-    "drizzle-kit": "^0.31.8"
+    "drizzle-kit": "^1.0.0-beta.12-a5629fb"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.1",
-    "drizzle-zod": "^0.8.3"
+    "drizzle-orm": "^1.0.0-beta.12-a5629fb",
+    "drizzle-zod": "^0.8.3",
+    "zod": "^4.3.6"
+  },
+  "scripts": {
+    "dev": "bun run ./index.ts"
   }
 }

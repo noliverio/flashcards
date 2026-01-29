@@ -1,31 +1,37 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
-import { sql } from "drizzle-orm"
+import { sql, defineRelations } from "drizzle-orm"
 import { createInsertSchema, createSelectSchema  } from "drizzle-zod"
+import { z } from "zod"
 
+const useHistoryFormat = z.object({uses: z.array(z.number())}, "invalid use history format")
 
-export const cardTable = sqliteTable("cards", {
+export const cards = sqliteTable("cards", {
     id: integer("id").primaryKey({"autoIncrement": true}),
-    category: integer().references(()=>categoryTable.id),
+    category_key: integer().references(()=>categories.id, {onDelete: "cascade"}).notNull(),
     question: text("question").notNull(),
     answer: text("answer").notNull(),
-    use_history: text().default(JSON.stringify({"uses": []})),
+    use_history: text({mode:"json"}),
     next_session: integer().notNull()
 })
 
-export const categoryTable = sqliteTable("categories", {
+export const categories = sqliteTable("categories", {
     id: integer("id").primaryKey({"autoIncrement": true}),
     category_name: text("category").notNull(),
-    session_number: integer().default(0),
-    last_play_date: text().default(sql`(current_timestamp)`)
+    session_number: integer().default(0).notNull(),
+    last_play_date: text().default(sql`(current_timestamp)`).notNull()
 })
 
-export const selectCardSchema = createSelectSchema(cardTable)
-export const selectCategorySchema = createSelectSchema(categoryTable)
+const selectCardBaseSchema = createSelectSchema(cards, {
+    use_history: useHistoryFormat
+})
+export const selectCategorySchema = createSelectSchema(categories)
 
-export const insertCardSchema = createInsertSchema(cardTable, {
-
+export const insertCardSchema = createInsertSchema(cards, {
+    use_history: useHistoryFormat
 })
 
-export const insertCategorySchema = createInsertSchema(categoryTable, {
-    
+export const insertCategorySchema = createInsertSchema(categories)
+
+export const selectCardSchema = selectCardBaseSchema.extend({
+    category: selectCategorySchema
 })
