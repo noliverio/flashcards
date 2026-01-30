@@ -1,10 +1,13 @@
-// drizzle.config.ts
 import { defineConfig } from "drizzle-kit";
+
+if (process.env.DB_URL == null) {
+  throw new Error("Path to database not configured.")
+}
 
 export default defineConfig({
   dialect: "sqlite",
-  schema: "./schema/cards.ts",
+  schema: "./schema",
   dbCredentials: {
-    url:"sqlite.db"
+    url: process.env.DB_URL
   },
 });

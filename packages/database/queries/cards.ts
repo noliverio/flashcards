@@ -1,6 +1,7 @@
 import { db } from "..";
-import { selectCardSchema, insertCardSchema } from "../schema/cards";
-import { cards, categories } from "../schema/cards";
+import { desc } from "drizzle-orm";
+import { selectCardSchema, insertCardSchema } from "../schema";
+import { cards, categories } from "../schema";
 import { z } from "zod"
 
 export async function getCardByID(cardID: string| number){
@@ -25,6 +26,12 @@ export async function getCardByID(cardID: string| number){
 
 export async function createNewCard(card:z.infer<typeof insertCardSchema>){
     const validated = insertCardSchema.parse(card)
-    const result = db.insert(cards).values(validated)
+    const result = await db.insert(cards).values(validated).returning()
+    // const result = await db.transaction(async (tx)=>{
+    //     const lastCard = await tx.select().from(cards).limit(1).orderBy(desc(cards.id))
+    //     const lastCardId = selectCardSchema.parse(lastCard).id
+    //     validated.id = lastCardId + 1
+    //     tx.insert(cards).values(validated) 
+    // })
     return result
 }

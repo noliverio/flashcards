@@ -16,7 +16,7 @@ console.log("prepped category")
 console.log(1)
 const insertCard1Parsed = insertCardSchema.parse({
     id: 1,
-    category:catObj.id,
+    category_key:catObj.id,
     question:"nihil",
     answer:"nothing",
     use_history: {uses:[0]},
@@ -26,7 +26,7 @@ console.log(2)
 
 const insertCard2Parsed = insertCardSchema.parse({
     id: 2,
-    category:catObj.id,
+    category_key:catObj.id,
     question:"saepe",
     answer:"often",
     use_history:{uses:[0]},
@@ -36,7 +36,7 @@ console.log(3)
 
 const insertCard3Parsed = insertCardSchema.parse({
     id: 3,
-    category:catObj.id,
+    category_key:catObj.id,
     question:"laudāre,",
     answer:"to praise",
     use_history:{uses:[0]},

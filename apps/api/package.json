@@ -12,9 +12,10 @@
   "dependencies": {
     "@flashcards/database": "workspace:*",
     "@hono/zod-validator": "^0.7.6",
-    "hono": "^4.11.4"
+    "hono": "^4.11.4",
+    "zod": "^4.3.6"
   },
   "scripts": {
-    "dev": "bun run --hot ./index.ts"
+    "dev": "bun --env-file=../../.env run --hot ./index.ts"
   }
 }
