@@ -25,7 +25,7 @@ export const selectCategorySchema = createSelectSchema(categories)
 
 export const insertCategorySchema = createInsertSchema(categories)
 
-const selectCardBaseSchema = createSelectSchema(cards, {
+export const selectCardBaseSchema = createSelectSchema(cards, {
     use_history: useHistoryFormat
 })
 export const updateCardSchema = createInsertSchema(cards, {

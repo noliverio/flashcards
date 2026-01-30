@@ -1,6 +1,7 @@
 import { db } from "..";
 import { desc } from "drizzle-orm";
-import { selectCardSchema, insertCardSchema } from "../schema";
+import { eq } from "drizzle-orm";
+import { selectCardSchema, insertCardSchema, selectCategorySchema, insertCategorySchema } from "../schema";
 import { cards, categories } from "../schema";
 import { z } from "zod"
 
@@ -27,11 +28,24 @@ export async function getCardByID(cardID: string| number){
 export async function createNewCard(card:z.infer<typeof insertCardSchema>){
     const validated = insertCardSchema.parse(card)
     const result = await db.insert(cards).values(validated).returning()
-    // const result = await db.transaction(async (tx)=>{
-    //     const lastCard = await tx.select().from(cards).limit(1).orderBy(desc(cards.id))
-    //     const lastCardId = selectCardSchema.parse(lastCard).id
-    //     validated.id = lastCardId + 1
-    //     tx.insert(cards).values(validated) 
-    // })
+    return result
+}
+
+export async function getCategoryByID(categoryId: string | number){
+    if (typeof categoryId == "string"){
+        categoryId = z.number().parse(categoryId)
+    }
+    const category_rows = await db.select().from(categories).where(eq(categories.id, categoryId))
+    if(category_rows.length == 0){
+        return null
+    }
+    const validated = selectCategorySchema.parse(category_rows[0])
+    return validated
+
+}
+
+export async function createNewCategory(category: z.infer<typeof insertCategorySchema>){
+    const validated = insertCategorySchema.parse(category)
+    const result = await db.insert(categories).values(validated).returning()
     return result
 }
