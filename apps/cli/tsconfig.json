@@ -1,5 +1,5 @@
 {
-  "extends": "@flashcards/packages/config/base.json",
+  // "extends": "@flashcards/packages/config/base.json",
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],
