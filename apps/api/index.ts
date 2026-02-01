@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator"
 import { Hono } from "hono";
 import { insertCardSchema, insertCategorySchema } from "@flashcards/database/schema";
-import { getCardByID, createNewCard } from "@flashcards/database/queries"
+import { getCardByID, createNewCard, deleteCard, deleteCategory } from "@flashcards/database/queries"
 import { getCategoryByID, createNewCategory } from "@flashcards/database/queries"
 import { z } from "zod"
 
@@ -44,4 +44,16 @@ app.post("/api/v1/category", zValidator("json", insertCategorySchema), async (c)
     const validatedInput = c.req.valid("json")
     const result = await createNewCategory(validatedInput)
     return c.json({success:true, card: result[0]})
+})
+
+app.delete("/api/v1/card/:cardID", async (c)=>{
+    const cardId = z.number().parse(c.req.param("cardID"))
+    const result = await deleteCard(cardId)
+    return c.json(result)
+})
+
+app.delete("/api/v1/category/:categoryID", async (c)=>{
+    const categoryId = z.number().parse(c.req.param("categoryID"))
+    const result = await deleteCategory(categoryId)
+    return c.json(result)
 })

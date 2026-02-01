@@ -49,3 +49,16 @@ export async function createNewCategory(category: z.infer<typeof insertCategoryS
     const result = await db.insert(categories).values(validated).returning()
     return result
 }
+
+export async function deleteCard(cardID: string|number) {
+    cardID = z.number().parse(cardID)
+    const result = await db.delete(cards).where(eq(cards.id, cardID)).returning()
+    return result
+}
+
+export async function deleteCategory(categoryId: string| number){
+    categoryId = z.number().parse(categoryId)
+    await db.delete(cards).where(eq(cards.category_key, categoryId))
+    const result = await db.delete(categories).where(eq(categories.id, categoryId)).returning()
+    return result
+}
