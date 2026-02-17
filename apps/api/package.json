@@ -12,10 +12,17 @@
   "dependencies": {
     "@flashcards/database": "workspace:*",
     "@hono/zod-validator": "^0.7.6",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.70.0",
+    "@opentelemetry/resources": "^2.5.1",
+    "@opentelemetry/sdk-metrics": "^2.5.1",
+    "@opentelemetry/sdk-node": "^0.212.0",
+    "@opentelemetry/sdk-trace-node": "^2.5.1",
+    "@opentelemetry/semantic-conventions": "^1.39.0",
     "hono": "^4.11.4",
     "zod": "^4.3.6"
   },
   "scripts": {
-    "dev": "bun --env-file=../../.env run --hot ./index.ts"
+    "dev": "bun --env-file=../../.env run --hot --import ./instrumentation.ts ./index.ts"
   }
 }

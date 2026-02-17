@@ -23,10 +23,13 @@ const newCard = await fetch("localhost:3000/api/v1/card", {
         "Content-Type": "application/json",
     },
 })
-const unparsed = await newCard.json()
+const unparsed: any = await newCard.json()
 // console.log(unparsed.card[0])
 const newCardJson = selectCardBaseSchema.parse(unparsed.card)
 console.log(newCardJson)
+const getURL = `localhost:3000/api/v1/card/${newCardJson.id}`
+console.log(getURL)
 console.log("fetching new card")
-const confirmation = await fetch(`localhost:3000/api/v1/card/${newCardJson.id}`)
+const confirmation = await fetch(getURL)
+console.log(confirmation)
 console.log(await confirmation.json())
