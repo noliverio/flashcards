@@ -4,10 +4,10 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "extends": "@flashcards/packages/config/base.json",
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
+  // "extends": "@flashcards/packages/config/base.json",
+  // "compilerOptions": {
+  //   "paths": {
+  //     "@/*": ["./src/*"]
+  //   }
+  // },
 }
