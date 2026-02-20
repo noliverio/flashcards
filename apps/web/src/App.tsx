@@ -1,13 +1,30 @@
 import CardUI from './ui/card'
 import './App.css'
 import { getCard } from './lib/api-queries'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { type selectCardSchema } from '@flashcards/database/schema'
+import { z } from "zod"
+
+type cardType = z.infer<typeof selectCardSchema>
 
 function App() {
-  
+  const blankCard: cardType|null = null
+  const [card, setCard] = useState(blankCard)
+
   useEffect(()=>{
-    const card = getCard(1)
-    return ()=>
+    async function _ (){
+      const eCard = await getCard(1)
+      
+      if (! ignore) { 
+        setCard(eCard)
+      }
+    }
+
+    let ignore = false
+    _()
+    return ()=>{
+      ignore = true
+    }
   })
 
   // const card = await getCard(1)
@@ -25,5 +42,3 @@ function App() {
     </div>
   )
 }
-
-export default App

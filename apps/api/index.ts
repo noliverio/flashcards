@@ -5,11 +5,7 @@ import { insertCardSchema, insertCategorySchema } from "@flashcards/database/sch
 import { getCardByID, createNewCard, deleteCard, deleteCategory } from "@flashcards/database/queries"
 import { getCategoryByID, createNewCategory } from "@flashcards/database/queries"
 import { z } from "zod"
-
-import opentelemetry from "@opentelemetry/api"
-import {trace, SpanStatusCode, type Span} from "@opentelemetry/api"
-
-export const tracer = opentelemetry.trace.getTracer("flashcards-api", "0.0.1")
+import { httpInstrumentationMiddleware } from "@hono/otel";
 
 
 const createCardPublicSchema = insertCardSchema.omit({
@@ -21,51 +17,33 @@ type createCardInput = z.infer<typeof createCardPublicSchema>
 
 
 const app = new Hono()
-
-app.use(cors({origin: 'http://localhost:5173',
-}))
+app.use(cors({origin: 'http://localhost:5173'}))
+app.use(httpInstrumentationMiddleware({serviceName:"flashcards-api", serviceVersion: "0.0.1", captureRequestHeaders: ["user-agent", "service-name"]}))
 
 // // // // // // //
 // GET ENDPOINTS  //
 // // // // // // //
 
-
 app.get('/', (c) => c.json({message:'Hello Bun!'}))
 
 app.get("/api/v1/card/:cardId", async (c) =>{
-    return tracer.startActiveSpan("getCard", async (span:Span) =>{
-        try{
-            const cardID = z.coerce.number().parse(c.req.param("cardId"))
-            span.setAttribute("cardID", cardID.toString())
-            const card = await getCardByID(cardID)
-            span.end()
-            return c.json(card)
-        } catch (e){
-            // TODO: find package to replace http status code numbers with semantic values.
-            if (e instanceof Error){
-                span.recordException(e)
-            }
-            span.setStatus({code: SpanStatusCode.ERROR})
-            return c.json({}, 400)
-        }
-    })
+    try{
+        const cardID = z.coerce.number().parse(c.req.param("cardId"))
+        const card = await getCardByID(cardID)
+        return c.json(card)
+    } catch (e){
+        return c.json({}, 400)
+    }
 })
 
 app.get("/api/v1/categories", async (c) => {
-    return tracer.startActiveSpan("listCategories", async (span:Span) => {
-        span.end()
-        return c.json({})
-    })
+    return c.json({})
 })
 
 app.get("/api/v1/category/:categoryId", async (c)=>{
-    return tracer.startActiveSpan("getCategory", async (span: Span)=>{
-        const categoryId = z.number().parse(c.req.param("categoryId"))
-        span.setAttribute("catedoryID", categoryId.toString())
-        const category = await getCategoryByID(categoryId)
-        span.end()
-        return c.json(category)  
-    })
+    const categoryId = z.number().parse(c.req.param("categoryId"))
+    const category = await getCategoryByID(categoryId)
+    return c.json(category)  
 })
 
 
@@ -75,20 +53,14 @@ app.get("/api/v1/category/:categoryId", async (c)=>{
 
 
 app.post("/api/v1/card", zValidator("json", createCardPublicSchema), async (c) => {
-    return tracer.startActiveSpan("createCard", async (span:Span) =>{
-        const validatedInput = c.req.valid("json")
-        span.setAttribute("category", validatedInput.category_key)
-        span.setAttribute("question", validatedInput.question)
-        span.setAttribute("answer", validatedInput.answer)
-        const newCard = insertCardSchema.parse({
-            ...validatedInput,
-            use_history: {uses:[]},
-            next_session: 0
-        })
-        const result = await createNewCard(newCard)
-        span.end()
-        return c.json({success:true, card: result[0]})
+    const validatedInput = c.req.valid("json")
+    const newCard = insertCardSchema.parse({
+        ...validatedInput,
+        use_history: {uses:[]},
+        next_session: 0
     })
+    const result = await createNewCard(newCard)
+    return c.json({success:true, card: result[0]})
 })
 
 app.post("/api/v1/category", zValidator("json", insertCategorySchema), async (c) => {

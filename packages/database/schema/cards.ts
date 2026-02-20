@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
-import { sql, defineRelations } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 import { createInsertSchema, createSelectSchema  } from "drizzle-zod"
 import { z } from "zod"
 
