@@ -13,11 +13,12 @@ const createCardPublicSchema = insertCardSchema.omit({
     next_session: true
 })
 
+const webappAddress = "http://localhost:5173"
+
 type createCardInput = z.infer<typeof createCardPublicSchema>
 
-
 const app = new Hono()
-app.use(cors({origin: 'http://localhost:5173'}))
+app.use(cors({origin: webappAddress}))
 app.use(httpInstrumentationMiddleware({serviceName:"flashcards-api", serviceVersion: "0.0.1", captureRequestHeaders: ["user-agent", "service-name"]}))
 
 // // // // // // //
