@@ -37,7 +37,6 @@ export function App() {
   console.log(2)
   return (
     <div>
-    <h1>Wave!</h1>
     <CardUI card={card} startWithQuestion={true}></CardUI>
     </div>
   )

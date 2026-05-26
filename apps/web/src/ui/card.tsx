@@ -9,12 +9,11 @@ export default function CardUI({card, startWithQuestion}:{card:card, startWithQu
 
     return (
         <>
-        <h1>HI!</h1>
         <div className="flex" onClick={()=>{setCardState(!showAnswer)}}>
             {showAnswer ? (
-                <p>${card.answer}</p>
+                <p>{card.answer}</p>
             ) : (
-                <p>${card.question}</p>
+                <p>{card.question}</p>
             )}
         </div>
         </>

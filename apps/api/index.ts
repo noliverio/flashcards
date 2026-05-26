@@ -13,7 +13,7 @@ const createCardPublicSchema = insertCardSchema.omit({
     next_session: true
 })
 
-const webappAddress = "http://localhost:5173"
+const webappAddress = "http://localhost:8080"
 
 type createCardInput = z.infer<typeof createCardPublicSchema>
 
