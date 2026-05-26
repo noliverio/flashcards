@@ -7,7 +7,10 @@
   "extends": "@flashcards/packages/config/base.json",
   "devDependencies": {
     "@types/bun": "latest",
-    "drizzle-kit": "^1.0.0-beta.12-a5629fb"
+    "@vitest/coverage-v8": "^4.1.7",
+    "@vitest/ui": "^4.1.7",
+    "drizzle-kit": "^1.0.0-beta.12-a5629fb",
+    "vitest": "^4.1.7"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -19,6 +22,9 @@
     "zod": "^4.3.6"
   },
   "scripts": {
-    "dev": "bun run ./index.ts --env-file=../../.env"
+    "dev": "bun run ./index.ts --env-file=../../.env",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage --ui"
   }
 }
