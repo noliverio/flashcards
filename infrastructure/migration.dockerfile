@@ -4,10 +4,11 @@ WORKDIR /app
 ENV DB_URL=/data/sqlite.db
 
 COPY packages ./packages
-COPY infrastructure/migration-drizzle.config.ts drizzle.config.ts
-
+# COPY packages/database/migration-drizzle.config.ts drizzle.config.ts
+COPY infrastructure/migrate.sh packages/database/migrate.sh
 
 WORKDIR /app/packages/database
 RUN bun install
+# WORKDIR /app
 
-ENTRYPOINT [ "bunx", "drizzle-kit", "push", "--config=drizzle.config.ts"]
+ENTRYPOINT ["/bin/bash", "migrate.sh"]
