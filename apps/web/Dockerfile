@@ -3,7 +3,7 @@ FROM oven/bun:${BUN_VERSION} AS builder
 WORKDIR /app
 
 # Copy lockfiles and workspace manifests for deterministic installs
-COPY package.json bun.lock* bun.lockb* ./
+COPY package.json ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages ./packages
 

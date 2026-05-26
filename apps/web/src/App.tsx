@@ -7,7 +7,7 @@ import { z } from "zod"
 
 type cardType = z.infer<typeof selectCardSchema>
 
-function App() {
+export function App() {
   const [card, setCard] = useState<cardType>()
 
   useEffect(()=>{
@@ -27,6 +27,13 @@ function App() {
   })
 
   console.log(1)
+  if (!card) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    )
+  }
   console.log(2)
   return (
     <div>

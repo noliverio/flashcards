@@ -1,6 +1,22 @@
+import { Command } from "commander"
+
 import type { Config } from "./types"
 import { homedir } from "node:os"
 import { join } from "node:path"
+
+const program = new Command()
+
+program.name("flashcards")
+       .description("use or create flashcards")
+       .version("0.0.0")
+
+program.command("new-card")
+       .description("create a new card")
+
+program.command("interactive")
+        .description("interactive mode")
+        .option("--create", "add new cards")
+        .option("--study", "use the flashcards")
 
 const config = await readConfig()
 

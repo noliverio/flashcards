@@ -1,6 +1,6 @@
 import { db } from ".";
-import { cards, categories } from "./schema/cards";
-import { insertCategorySchema, insertCardSchema } from "./schema/cards";
+import { cards, categories } from "./schema";
+import { insertCategorySchema, insertCardSchema } from "./schema";
 
 console.log("preparing data")
 

@@ -1,5 +1,5 @@
 import { db } from "..";
-import { desc } from "drizzle-orm";
+// import { desc } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 import { selectCardSchema, insertCardSchema, selectCategorySchema, insertCategorySchema } from "../schema";
 import { cards, categories } from "../schema";

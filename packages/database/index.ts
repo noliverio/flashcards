@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/bun-sqlite";
-import {relations} from "./schema/relations"
+import {relations} from "./schema"
 
 
 if (process.env.DB_URL == null) {
