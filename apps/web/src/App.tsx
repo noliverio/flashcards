@@ -24,7 +24,7 @@ export function App() {
     return ()=>{
       ignore = true
     }
-  })
+  }, [])
 
   console.log(1)
   if (!card) {
