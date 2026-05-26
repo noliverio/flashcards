@@ -73,7 +73,7 @@ export default defineConfig([
 ```
 
 
-## Docker (production)
+## Commands
 
 Build the production image (from the repository root):
 
@@ -86,7 +86,3 @@ Run the container and serve the built SPA on port 8080:
 ```bash
 docker run --rm -p 8080:80 flashcards-web:local
 ```
-
-Notes:
-- The builder stage uses Bun to run `bun run build` (Vite + `dist/`) and the runtime stage serves static files with Nginx.
-- For local development continue to use `bun` / `vite` (`pnpm install && pnpm dev` or `bun install && bun run dev`).

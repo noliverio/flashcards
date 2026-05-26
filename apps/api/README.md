@@ -2,7 +2,7 @@
 
 The backend api for flashcards app.
 
-## Docker (production)
+## Commands
 
 Build the image (from the repository root):
 
@@ -21,6 +21,3 @@ docker run --rm -p 3000:3000 \
 	flashcards-api:local
 ```
 
-Notes:
-- The image uses Bun to run TypeScript directly (`apps/api/serve.ts`).
-- Do not bake your `.env` or secrets into the image; pass them at runtime.
