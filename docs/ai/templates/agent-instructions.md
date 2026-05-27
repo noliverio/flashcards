@@ -68,4 +68,3 @@ This file describes what an AI agent is allowed to do and how it should report r
 - Safety & privacy:
 	- Before saving, redact any secrets, credentials, or tokens. Replace them with placeholders like `REDACTED_TOKEN`.
 	- If the run depended on private credentials or production data, STOP and request a human to run the archival script locally instead of saving sensitive artifacts.
-

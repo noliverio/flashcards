@@ -4,6 +4,7 @@ import { getCard } from './lib/api-queries'
 import { useEffect, useState, useRef } from 'react'
 import { selectCardSchema } from '@flashcards/database/schema'
 import { z } from "zod"
+import Management from './ui/Management'
 
 type cardType = z.infer<typeof selectCardSchema>
 
@@ -11,6 +12,7 @@ export function App() {
   const [card, setCard] = useState<cardType | undefined>()
   const [cardIDInput, setCardIDInput] = useState<string>('1')
   const mountedRef = useRef(true)
+  const [showManagement, setShowManagement] = useState(false)
 
   const fetchCardById = async (id: number) => {
     const eCard = await getCard(id)
@@ -47,7 +49,9 @@ export function App() {
         >
           Fetch
         </button>
+        <button type="button" onClick={() => setShowManagement(true)}>Management</button>
       </div>
+      {showManagement && <Management onClose={() => setShowManagement(false)} />}
 
       {!card ? (
         <div>
