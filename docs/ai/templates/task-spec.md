@@ -12,6 +12,7 @@ Fields
 - **Edge cases**: Known corner cases to verify.
 - **Risk & rollback**: How to revert, DB migration note, and expected migration path.
 - **Estimate & priority**: Small/medium/large + priority tag.
+- **Archive**: Whether to save the transcript and output artifacts.
 
 Example
 
@@ -24,3 +25,4 @@ Example
 - **Repro steps**: `bun --filter ./apps/api test -- -t "create card"`
 - **Scope**: `apps/api/**`, `packages/database/**`
 - **Estimate**: Small
+- **Archive**: True
