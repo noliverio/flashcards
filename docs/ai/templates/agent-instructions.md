@@ -41,3 +41,31 @@ This file describes what an AI agent is allowed to do and how it should report r
 7. Confidence threshold
 
 - If any test fails after the proposed fix or if the change touches forbidden paths, return for human review.
+
+8. Archive run artifacts (optional)
+
+- When the human user asks an exploratory question, that is any request for information that does not result in a code change write that question, and your response to `tmp/q-and-a.md`. Do this unless instructed not to. (for example a field `Archive: False`)
+
+- When you have completed the Step plan and produced the unified diff, transcript, and file list, you SHOULD archive the prompt, agent transcript, diff, and files-changed list to `docs/ai/` using the project's save script. This is required when the human requester requests it or when you finish all tasks successfully.
+- How to prepare files (recommended):
+	- `tmp/prompt.md` — the full prompt you were given (redact any secrets).
+	- `tmp/transcript.txt` — the full agent transcript (messages exchanged).
+	- `tmp/patch.diff` — the unified diff you are returning.
+	- `tmp/files.txt` — newline-separated list of changed files.
+    - `tmp/q-and-a.md` — any exploratory questions asked by the user about the code.
+- How to run the save script:
+	- Node:
+		- `node scripts/ai/save-ai-log.js --issue <id> --title "<short title>" --prompt-file tmp/prompt.md --transcript-file tmp/transcript.txt --diff-file tmp/patch.diff --files-changed-file tmp/files.txt`
+	- Package script (bun/node):
+		- `bun run ai:save-log -- --issue <id> --title "<short title>" --prompt-file tmp/prompt.md --transcript-file tmp/transcript.txt --diff-file tmp/patch.diff --files-changed-file tmp/files.txt`
+- When to run the script:
+	- Run automatically at the end of your Step plan only if the human requester granted permission in the prompt (for example a field `Archive: True`).
+	- Otherwise, run only when explicitly instructed in the chat with a clear directive such as `save run log` or `archive ai-log`.
+- Output and expectations:
+	- The script writes a markdown log to `docs/ai/example-<issue>-ai-log.md` and creates a timestamped backup if the file exists.
+	- DO NOT attempt to commit, push, or create branches in the repository — creating or editing files locally is allowed, but git operations are forbidden.
+	- After running, include the path of the generated log in your final message to the user and paste the header section (Issue, Commit SHA, Recorded at) so reviewers can find the file.
+- Safety & privacy:
+	- Before saving, redact any secrets, credentials, or tokens. Replace them with placeholders like `REDACTED_TOKEN`.
+	- If the run depended on private credentials or production data, STOP and request a human to run the archival script locally instead of saving sensitive artifacts.
+

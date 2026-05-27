@@ -1,0 +1,77 @@
+name: Save AI run log
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+
+jobs:
+  save-ai-log:
+    name: Save AI run log for labeled PRs
+    runs-on: ubuntu-latest
+    if: ${{ github.event.label && github.event.label.name == 'ai-generated' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract AI sections from PR body
+        uses: actions/github-script@v7
+        id: extract
+        with:
+          script: |
+            const fs = require('fs')
+            const pr = context.payload.pull_request
+            if (!pr) return
+            const body = pr.body || ''
+            function extract(tag){
+              const start = `<!-- ${tag}_START -->`
+              const end = `<!-- ${tag}_END -->`
+              const s = body.indexOf(start)
+              const e = body.indexOf(end)
+              if (s === -1 || e === -1) return ''
+              return body.substring(s + start.length, e).trim()
+            }
+            const prompt = extract('AI_PROMPT')
+            const transcript = extract('AI_TRANSCRIPT')
+            const diff = extract('AI_DIFF')
+            const files = extract('AI_FILES_CHANGED')
+            fs.mkdirSync('./tmp', { recursive: true })
+            if (prompt) fs.writeFileSync('./tmp/prompt.md', prompt)
+            if (transcript) fs.writeFileSync('./tmp/transcript.txt', transcript)
+            if (diff) fs.writeFileSync('./tmp/patch.diff', diff)
+            if (files) fs.writeFileSync('./tmp/files.txt', files)
+            return { prompt: Boolean(prompt), transcript: Boolean(transcript), diff: Boolean(diff), files: Boolean(files) }
+
+      - name: Run save-ai-log.js
+        run: |
+          node scripts/ai/save-ai-log.js --issue ${{ github.event.pull_request.number }} --title "${{ github.event.pull_request.title }}" \
+            --prompt-file ./tmp/prompt.md --transcript-file ./tmp/transcript.txt --diff-file ./tmp/patch.diff \
+            --files-changed-file ./tmp/files.txt --commit ${{ github.event.pull_request.head.sha }}
+
+      - name: Commit generated log to new branch and push
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH=ai-log/pr-${PR_NUMBER}-$(date +%s)
+          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
+          git checkout -b ${BRANCH}
+          git add docs/ai/example-${PR_NUMBER}-ai-log.md || true
+          git commit -m "docs(ai): add AI run log for PR #${PR_NUMBER}" || echo "nothing to commit"
+          git push --set-upstream origin ${BRANCH}
+
+      - name: Comment on PR with log location
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request
+            const issue = pr.number
+            const branch = process.env.BRANCH
+            const comment = `AI run log saved to docs/ai/example-${issue}-ai-log.md and committed to branch ${branch}.`
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: issue, body: comment })

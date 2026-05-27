@@ -2,6 +2,9 @@
   "name": "flashcards-monorepo",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "ai:save-log": "node ./scripts/ai/save-ai-log.js"
+  },
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"

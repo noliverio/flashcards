@@ -1,0 +1,69 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "aiIssueId",
+      "type": "promptString",
+      "description": "AI issue number (or identifier)"
+    },
+    {
+      "id": "aiTitle",
+      "type": "promptString",
+      "description": "Short title for the AI run",
+      "default": ""
+    },
+    {
+      "id": "aiPromptFile",
+      "type": "promptString",
+      "description": "Path to prompt file",
+      "default": "tmp/prompt.md"
+    },
+    {
+      "id": "aiTranscriptFile",
+      "type": "promptString",
+      "description": "Path to transcript file",
+      "default": "tmp/transcript.txt"
+    },
+    {
+      "id": "aiDiffFile",
+      "type": "promptString",
+      "description": "Path to unified diff file",
+      "default": "tmp/patch.diff"
+    },
+    {
+      "id": "aiFilesChangedFile",
+      "type": "promptString",
+      "description": "Path to files-changed list",
+      "default": "tmp/files.txt"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Save AI run log",
+      "type": "shell",
+      "command": "bun",
+      "args": [
+        "scripts/ai/save-ai-log.js",
+        "--issue",
+        "${input:aiIssueId}",
+        "--title",
+        "${input:aiTitle}",
+        "--prompt-file",
+        "${input:aiPromptFile}",
+        "--transcript-file",
+        "${input:aiTranscriptFile}",
+        "--diff-file",
+        "${input:aiDiffFile}",
+        "--files-changed-file",
+        "${input:aiFilesChangedFile}"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
