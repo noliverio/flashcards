@@ -22,3 +22,15 @@ export async function getCard(cardID: number) {
     const card = selectCardSchema.parse(cardJSON)
     return card
 }
+
+export async function createCard(newCard:string){
+    const path = `${baseAPIPath}/api/v1/card`
+    const resp = await fetch(path, {
+        method: "POST",
+        body:JSON.stringify(newCard)
+    })
+    if (( 300 <= resp.status) || (resp.status <= 199)){
+        // TODO replace magic numbers
+        return
+    }
+}

@@ -1,9 +1,8 @@
 import { Button } from "./button"
-// import { selectCardSchema } from '@flashcards/database/schema'
-// import { z } from "zod"
+import { selectCategorySchema } from '@flashcards/database/schema'
+import { z } from "zod"
 
-// type Card = z.infer<typeof selectCardSchema>
-type Category = { id: string; name: string }
+type Category = z.infer<typeof selectCategorySchema>
 
 export function ListCategory({categories}:{categories:Category[]}){
   return (
@@ -12,7 +11,7 @@ export function ListCategory({categories}:{categories:Category[]}){
 <ul className="mt-2 space-y-2">
   {categories.map((c) => (
     <li key={c.id} className="flex items-center justify-between">
-      <span className="text-base">{c.name}</span>
+      <span className="text-base">{c.category_name}</span>
       <button className="ml-3 text-red-600 hover:text-red-800">Delete</button>
     </li>
   ))}

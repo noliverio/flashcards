@@ -1,11 +1,10 @@
 import { Button } from "./button"
-// import { selectCardSchema } from '@flashcards/database/schema'
-// import { z } from "zod"
+import { selectCardSchema } from '@flashcards/database/schema'
+import { z } from "zod"
 
-// type Card = z.infer<typeof selectCardSchema>
-type Card = { id: string; question: string; answer: string; categoryId: string }
+type selCard = z.infer<typeof selectCardSchema>
 
-export function ListCards({cards}:{cards:Card[]}){
+export function ListCards({cards}:{cards:selCard[]}){
   return (
 <>
 <h2 className="text-lg font-semibold mt-6">Cards</h2>
@@ -32,7 +31,7 @@ return(
 )
 }
 
-export function ManageCards({cards}:{cards:Card[]}){
+export function ManageCards({cards}:{cards:selCard[]}){
   return (
 <section>
   <ListCards cards={cards} />

@@ -1,20 +1,6 @@
 import { ManageCards } from "./ui/manage-cards";
 import { ManageCategory } from "./ui/manage-categories";
-
-
-
-type Card = { id: string; question: string; answer: string; categoryId: string }
-type Category = { id: string; name: string }
-
-const mockCategories: Category[] = [
-  { id: 'cat-1', name: 'Math' },
-  { id: 'cat-2', name: 'Science' },
-]
-
-const mockCards: Card[] = [
-  { id: 'card-1', question: '2+2', answer: '4', categoryId: 'cat-1' },
-  { id: 'card-2', question: 'What is H2O?', answer: 'Water', categoryId: 'cat-2' },
-]
+import { selCards, selCategories } from "./lib/mocks.tsx"
 
 export default function Management({ onClose }: { onClose?: () => void }) {
   return (
@@ -31,8 +17,8 @@ export default function Management({ onClose }: { onClose?: () => void }) {
         )}
       </header>
 
-      <ManageCategory categories={mockCategories} />
-      <ManageCards cards={mockCards} />
+      <ManageCategory categories={selCategories} />
+      <ManageCards cards={selCards} />
     </div>
   )
 }
