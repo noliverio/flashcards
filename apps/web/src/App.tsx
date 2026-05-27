@@ -30,37 +30,42 @@ export function App() {
 
   return (
     <div>
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          Card ID:&nbsp;
-          <input
-            type="number"
-            value={cardIDInput}
-            onChange={(e) => setCardIDInput(e.target.value)}
-          />
-        </label>
-        <button
-          onClick={() => {
-            const id = parseInt(cardIDInput, 10)
-            if (!Number.isNaN(id)) {
-              void fetchCardById(id)
-            }
-          }}
-        >
-          Fetch
-        </button>
-        <button type="button" onClick={() => setShowManagement(true)}>Management</button>
-      </div>
-      {showManagement && <Management onClose={() => setShowManagement(false)} />}
-
-      {!card ? (
-        <div>
-          <p>Loading...</p>
-        </div>
+      {showManagement ? (
+        <Management onClose={() => setShowManagement(false)} />
       ) : (
-        <div>
-          <CardUI card={card} startWithQuestion={true} />
-        </div>
+        <>
+          <div style={{ marginBottom: '1rem' }}>
+            <label>
+              Card ID:&nbsp;
+              <input
+                type="number"
+                value={cardIDInput}
+                onChange={(e) => setCardIDInput(e.target.value)}
+              />
+            </label>
+            <button
+              onClick={() => {
+                const id = parseInt(cardIDInput, 10)
+                if (!Number.isNaN(id)) {
+                  void fetchCardById(id)
+                }
+              }}
+            >
+              Fetch
+            </button>
+            <button type="button" onClick={() => setShowManagement(true)}>Management</button>
+          </div>
+
+          {!card ? (
+            <div>
+              <p>Loading...</p>
+            </div>
+          ) : (
+            <div>
+              <CardUI card={card} startWithQuestion={true} />
+            </div>
+          )}
+        </>
       )}
     </div>
   )
