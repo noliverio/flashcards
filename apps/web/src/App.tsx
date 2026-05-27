@@ -4,7 +4,7 @@ import { getCard } from './lib/api-queries'
 import { useEffect, useState, useRef } from 'react'
 import { selectCardSchema } from '@flashcards/database/schema'
 import { z } from "zod"
-import Management from './ui/Management'
+import Management from './Management'
 
 type cardType = z.infer<typeof selectCardSchema>
 

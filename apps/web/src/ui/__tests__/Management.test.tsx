@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
-import Management from '../Management'
+import Management from '../../Management'
 import { App } from '../../App'
 
 // Mock network calls to avoid real fetch in tests
