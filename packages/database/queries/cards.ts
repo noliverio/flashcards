@@ -45,8 +45,11 @@ export async function createNewCard(card:z.infer<typeof insertCardSchema>){
 export async function listCategories(){
     return tracer.startActiveSpan("listCategories", async (span:Span) =>{
         const rows = await db.select().from(categories)
-        
+        if (rows.length == 0){
+            return null
+        }
         span.end()
+        return rows
     })
 }
 

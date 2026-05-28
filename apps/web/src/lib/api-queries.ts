@@ -1,14 +1,27 @@
-import { selectCardSchema } from "@flashcards/database/schema";
+// import { selectCardSchema } from "@flashcards/database/schema";
+import { selectCardSchema, selectCategorySchema } from "@flashcards/database/schema";
+import type { iCategoryType } from "./types";
 
 const baseAPIPath = "http://localhost:3000"
 
+export async function getCardsByCategory(category: string){
+// take a category id, return all cards with that id.
+//
+console.log(category)
+}
+
 export async function getCategories() {
+    const categories = []
     const path = `${baseAPIPath}/api/v1/categories`
     const resp = await fetch(path)
+    const categoriesJSON = await resp.json()
     if (( 300 <= resp.status) || (resp.status <= 199)){
-        // TODO replace magic numbers
         return
     }
+    for (const categoryJSON of categoriesJSON){
+        categories.push(selectCategorySchema.parse(categoryJSON))
+    }
+    return categories
 }
 
 export async function getCard(cardID: number) {
@@ -33,4 +46,17 @@ export async function createCard(newCard:string){
         // TODO replace magic numbers
         return
     }
+}
+
+export async function createCategory(newCategory:iCategoryType){
+    const path = `${baseAPIPath}/api/v1/category`
+    const resp = await fetch(path, {
+        method: "POST",
+        body: JSON.stringify(newCategory)
+    })
+    if (( 300 <= resp.status) || (resp.status <= 199)){
+        // TODO replace magic numbers
+        return false
+    }
+    return true
 }

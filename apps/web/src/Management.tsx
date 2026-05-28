@@ -1,8 +1,29 @@
 import { ManageCards } from "./ui/manage-cards";
 import { ManageCategory } from "./ui/manage-categories";
-import { selCards, selCategories } from "./lib/mocks.tsx"
+import { selCards } from "./lib/mocks.tsx"
+import { getCategories } from "./lib/api-queries.ts"
+import { useEffect, useState } from "react";
+import { type sCategoryType } from "./lib/types.tsx";
+
 
 export default function Management({ onClose }: { onClose?: () => void }) {
+  const [categories, setCategories] = useState<sCategoryType[] | undefined>()
+
+
+  useEffect(()=>{
+    async function _ (){
+      const i = await getCategories()
+      if (! ignore) { 
+        setCategories(i)
+      }
+    }
+    let ignore = false
+    _()
+    return ()=>{
+      ignore = true
+    }
+  }, [])
+
   return (
     <div className="p-6 font-sans max-w-4xl mx-auto" data-testid="management-root">
       <header className="flex items-center justify-between mb-4">
@@ -16,8 +37,7 @@ export default function Management({ onClose }: { onClose?: () => void }) {
           </button>
         )}
       </header>
-
-      <ManageCategory categories={selCategories} />
+      { (categories === undefined) ? <p> No categories found</p> : <ManageCategory categories={categories} />}
       <ManageCards cards={selCards} />
     </div>
   )

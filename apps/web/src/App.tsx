@@ -1,32 +1,30 @@
 import CardUI from './ui/card'
 import './App.css'
 import { getCard } from './lib/api-queries'
-import { useEffect, useState, useRef } from 'react'
-import { selectCardSchema } from '@flashcards/database/schema'
-import { z } from "zod"
+import { useEffect, useState } from 'react'
+import { type sCardType } from './lib/types'
 import Management from './Management'
 
-type cardType = z.infer<typeof selectCardSchema>
-
 export function App() {
-  const [card, setCard] = useState<cardType | undefined>()
-  const [cardIDInput, setCardIDInput] = useState<string>('1')
-  const mountedRef = useRef(true)
+  const [card, setCard] = useState<sCardType | undefined>()
+  const [cardID, setCardID] = useState<number>(1)
   const [showManagement, setShowManagement] = useState(false)
 
-  const fetchCardById = async (id: number) => {
-    const eCard = await getCard(id)
-    if (mountedRef.current) {
-      setCard(eCard)
+  useEffect(()=>{
+    async function _ (){
+      const eCard = await getCard(cardID)
+      if (! ignore) { 
+        setCard(eCard)
+      }
     }
-  }
 
-  useEffect(() => {
-    fetchCardById(1)
-    return () => {
-      mountedRef.current = false
+    let ignore = false
+    _()
+    return ()=>{
+      ignore = true
     }
-  }, [])
+  }, [cardID])
+
 
   return (
     <div>
@@ -35,25 +33,21 @@ export function App() {
       ) : (
         <>
           <div style={{ marginBottom: '1rem' }}>
-            <label>
-              Card ID:&nbsp;
-              <input
-                type="number"
-                value={cardIDInput}
-                onChange={(e) => setCardIDInput(e.target.value)}
-              />
-            </label>
-            <button
-              onClick={() => {
-                const id = parseInt(cardIDInput, 10)
-                if (!Number.isNaN(id)) {
-                  void fetchCardById(id)
-                }
-              }}
-            >
-              Fetch
-            </button>
-            <button type="button" onClick={() => setShowManagement(true)}>Management</button>
+            {/* <form action={updateCard}> */}
+            <form action={
+              (formData:FormData)=>{
+                const id = formData.get("cardID") as string
+                const idNum = parseInt(id)
+                setCardID(idNum)
+              }
+            }>
+              <label>
+                Card ID:
+                <input type="number" defaultValue={cardID} name="cardID"/>
+              </label>
+              {/* <input type="submit"></input> */}
+              <button type="submit">Fetch</button>
+            </form>
           </div>
 
           {!card ? (
@@ -65,6 +59,7 @@ export function App() {
               <CardUI card={card} startWithQuestion={true} />
             </div>
           )}
+        <button type="button" onClick={() => setShowManagement(true)}>Management</button>
         </>
       )}
     </div>

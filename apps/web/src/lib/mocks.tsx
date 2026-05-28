@@ -1,12 +1,5 @@
-import { z } from "zod"
-import { insertCategorySchema, insertCardSchema, selectCardSchema, selectCategorySchema } from "@flashcards/database/schema";
-
-
-type selCard = z.infer<typeof selectCardSchema>
-type selCategory = z.infer<typeof selectCategorySchema>
-type insCard = z.infer<typeof insertCardSchema>
-type insCategory = z.infer<typeof insertCategorySchema>
-
+import { insertCardSchema, selectCardSchema } from "@flashcards/database/schema";
+import { type sCardType, type sCategoryType, type iCardType, type iCategoryType } from "./types";
 
 
 const insCat1Obj = {
@@ -51,8 +44,8 @@ const insertCard3Parsed = insertCardSchema.parse({
     next_session:1
 })
 
-export const insCategories: insCategory[] = [insCat1Obj, insCat2Obj]
-export const insCards: insCard[] = [ insertCard1Parsed, insertCard2Parsed, insertCard3Parsed]
+export const insCategories: iCategoryType[] = [insCat1Obj, insCat2Obj]
+export const insCards: iCardType[] = [ insertCard1Parsed, insertCard2Parsed, insertCard3Parsed]
 
 
 
@@ -102,5 +95,5 @@ const selectCard3Parsed = selectCardSchema.parse({
 })
 
 
-export const selCategories: selCategory[] = [selCat1Obj, selCat2Obj]
-export const selCards: selCard[] = [ selectCard1Parsed, selectCard2Parsed, selectCard3Parsed]
+export const selCategories: sCategoryType[] = [selCat1Obj, selCat2Obj]
+export const selCards: sCardType[] = [ selectCard1Parsed, selectCard2Parsed, selectCard3Parsed]

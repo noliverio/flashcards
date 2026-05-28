@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator"
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { insertCardSchema, insertCategorySchema } from "@flashcards/database/schema";
-import { getCardByID, createNewCard, deleteCard, deleteCategory } from "@flashcards/database/queries"
+import { getCardByID, createNewCard, deleteCard, deleteCategory, listCategories } from "@flashcards/database/queries"
 import { getCategoryByID, createNewCategory } from "@flashcards/database/queries"
 import { z } from "zod"
 import { httpInstrumentationMiddleware } from "@hono/otel";
@@ -29,18 +29,23 @@ app.get('/', (c) => c.json({message:'Hello Bun!'}))
 
 app.get("/api/v1/card/:cardId", async (c) =>{
     // TODO: return an error if the card does not exist
-    console.log(c.req.param("cardId"))
+    // console.log(c.req.param("cardId"))
     try{
         const cardID = z.coerce.number().parse(c.req.param("cardId"))
         const card = await getCardByID(cardID)
         return c.json(card)
     } catch (e){
-        return c.json({}, 400)
+        return c.json({}, 500)
     }
 })
 
 app.get("/api/v1/categories", async (c) => {
-    return c.json({})
+    try{
+        const categories = await listCategories()
+        return c.json(categories)
+    } catch (e){
+        return c.json({}, 500)
+    }
 })
 
 app.get("/api/v1/category/:categoryId", async (c)=>{
