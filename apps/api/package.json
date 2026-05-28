@@ -4,7 +4,11 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "eslint": "^10.4.0",
+    "@typescript-eslint/parser": "^8.60.0",
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
+    "globals": "^17.6.0"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -24,6 +28,7 @@
     "zod": "^4.3.6"
   },
   "scripts": {
-    "dev": "bun --env-file=../../.env run --hot --import ./instrumentation.ts ./index.ts"
+    "dev": "bun --env-file=../../.env run --hot --import ./instrumentation.ts ./index.ts",
+    "lint": "sh -c 'NODE_PATH=../web/node_modules node ../web/node_modules/eslint/bin/eslint.js . --ext .ts,.tsx'"
   }
 }

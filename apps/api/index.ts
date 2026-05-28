@@ -54,6 +54,11 @@ app.get("/api/v1/category/:categoryId", async (c)=>{
     return c.json(category)  
 })
 
+// app.get("/api/v1/category/:categoryId/cards", async (c)=>{
+//     const categoryId = z.coerce.number().parse(c.req.param("categoryId"))
+//     const category = await getCategoryByID(categoryId)
+//     return c.json(category)  
+// })
 
 // // // // // // //
 // POST ENDPOINTS //

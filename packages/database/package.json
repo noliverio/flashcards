@@ -6,10 +6,14 @@
   "private": true,
   "extends": "@flashcards/packages/config/base.json",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/bun": "latest",
     "@vitest/coverage-v8": "^4.1.7",
     "@vitest/ui": "^4.1.7",
     "drizzle-kit": "^1.0.0-beta.12-a5629fb",
+    "eslint": "^10.4.0",
+    "globals": "^17.6.0",
+    "typescript-eslint": "^8.60.0",
     "vitest": "^4.1.7"
   },
   "peerDependencies": {
@@ -25,6 +29,7 @@
     "dev": "bun run ./index.ts --env-file=../../.env",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage --ui"
+    "test:coverage": "vitest --coverage --ui",
+    "lint": "eslint ."
   }
 }

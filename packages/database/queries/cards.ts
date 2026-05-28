@@ -5,7 +5,7 @@ import { selectCardSchema, insertCardSchema, selectCategorySchema, insertCategor
 import { cards, categories } from "../schema";
 import { z } from "zod"
 import opentelemetry from "@opentelemetry/api"
-import {trace, type Span} from "@opentelemetry/api"
+import { type Span} from "@opentelemetry/api"
 
 const tracer = opentelemetry.trace.getTracer("flashcard-db-lib", "0.0.1")
 
@@ -52,6 +52,11 @@ export async function listCategories(){
         return rows
     })
 }
+// export async function listCardsByCategory(categoryId: string|number){
+//     return tracer.startActiveSpan("listCardsByCategory", async (span:Span) => {
+//         const
+//     })
+// }
 
 export async function getCategoryByID(categoryId: string | number){
     return tracer.startActiveSpan("getCategoryByID", async(span: Span) =>{
