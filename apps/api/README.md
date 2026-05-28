@@ -20,4 +20,3 @@ docker run --rm -p 3000:3000 \
 	-v ./sqlite.db:/data/sqlite.db:rw \
 	flashcards-api:local
 ```
-

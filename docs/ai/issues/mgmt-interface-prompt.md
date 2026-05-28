@@ -13,7 +13,7 @@ Use this template when creating a task for an AI agent. Fill every field — the
   3. The patch is limited to the scope files.
   4. Visual/behavior acceptance: the management interface and cards do not overlap; only one is visible at a time; there is an obvious way to return to the cards view (e.g., "Back" or "Close").
   5. Tests verify that showing the management view hides the cards view.
-- **Commands to run**: 
+- **Commands to run**:
   - `bun install`
   - `bun run lint`
   - `bun --filter ./apps/web dev` (manual verification)

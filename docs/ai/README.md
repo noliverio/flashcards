@@ -3,11 +3,13 @@
 This folder contains templates, guidelines, and examples for using an AI agent safely and productively in this repository.
 
 Quick start
+
 - Use the templates in `docs/ai/templates/` to create a task or issue for an agent.
 - Attach context per `docs/ai/context-capture.md` so the agent has reproducible information.
 - Ask the agent using the `prompt-template.md` + `agent-instructions.md` files. Require the agent to return a patch and verification commands.
 
 Where things live
+
 - Templates: docs/ai/templates/
 - Context guide: docs/ai/context-capture.md
 - Runbook & verification: docs/ai/runbook.md
@@ -16,6 +18,7 @@ Where things live
 - Proposed changes to Agent forbidden directories can be made in docs/ai/proposals
 
 Conventions
+
 - Branch/patch output: agents should not push directly; provide a patch/diff and a PR body draft.
 - Commit message format (for humans applying agent output): `ai: <short summary> (#<issue>)`.
 - Branch name template (when human applies changes): `ai/<issue>-short-desc`.
@@ -23,6 +26,7 @@ Conventions
 If you are unsure about scope or any change touches `infrastructure/`, CI, or secrets, require a human review first.
 
 Saving agent runs (automation)
+
 - Use the included script to save the prompt, agent transcript and unified diff into a markdown log under `docs/ai/`.
 
 Example (node):
@@ -50,6 +54,6 @@ You can run the save script directly from VS Code using the included task. Open 
 The task will prompt for the issue id, title and paths for the prompt/transcript/diff/files-changed. The script will auto-detect the current git commit if you don't pass one.
 
 Tips:
+
 - Save the prompt/transcript/diff to temporary files (for example `tmp/prompt.md`, `tmp/transcript.txt`, `tmp/patch.diff`) before running the task.
 - After the task runs, the generated log will be written to `docs/ai/example-<issue>-ai-log.md`.
-

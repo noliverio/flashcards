@@ -1,31 +1,32 @@
 import { ManageCards } from "./ui/manage-cards";
 import { ManageCategory } from "./ui/manage-categories";
-import { selCards } from "./lib/mocks.tsx"
-import { getCategories } from "./lib/api-queries.ts"
+import { selCards } from "./lib/mocks.tsx";
+import { getCategories } from "./lib/api-queries.ts";
 import { useEffect, useState } from "react";
 import { type sCategoryType } from "./lib/types.tsx";
 
-
 export default function Management({ onClose }: { onClose?: () => void }) {
-  const [categories, setCategories] = useState<sCategoryType[] | undefined>()
+  const [categories, setCategories] = useState<sCategoryType[] | undefined>();
 
-
-  useEffect(()=>{
-    async function _ (){
-      const i = await getCategories()
-      if (! ignore) { 
-        setCategories(i)
+  useEffect(() => {
+    async function _() {
+      const i = await getCategories();
+      if (!ignore) {
+        setCategories(i);
       }
     }
-    let ignore = false
-    _()
-    return ()=>{
-      ignore = true
-    }
-  }, [])
+    let ignore = false;
+    _();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
-    <div className="p-6 font-sans max-w-4xl mx-auto" data-testid="management-root">
+    <div
+      className="p-6 font-sans max-w-4xl mx-auto"
+      data-testid="management-root"
+    >
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Management</h1>
         {onClose && (
@@ -37,8 +38,12 @@ export default function Management({ onClose }: { onClose?: () => void }) {
           </button>
         )}
       </header>
-      { (categories === undefined) ? <p> No categories found</p> : <ManageCategory categories={categories} />}
+      {categories === undefined ? (
+        <p> No categories found</p>
+      ) : (
+        <ManageCategory categories={categories} />
+      )}
       <ManageCards cards={selCards} />
     </div>
-  )
+  );
 }

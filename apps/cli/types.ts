@@ -1,3 +1,3 @@
 export type Config = {
-    api_url: string
-}
+  api_url: string;
+};

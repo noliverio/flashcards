@@ -31,5 +31,6 @@ bun --filter ./packages/database test > packages-database-test.txt 2>&1 || true
 ```
 
 Notes
+
 - Redact any secrets or environment values before attaching logs.
 - If the problem depends on environment vars, provide a sanitized env file and sample values.

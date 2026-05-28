@@ -2,13 +2,13 @@ import { defineConfig } from "drizzle-kit";
 
 if (process.env.DB_URL == null) {
   // console.log(process.env)
-  throw new Error("Path to database not configured.")
+  throw new Error("Path to database not configured.");
 }
 
 export default defineConfig({
   dialect: "sqlite",
   schema: "./schema",
   dbCredentials: {
-    url: process.env.DB_URL
+    url: process.env.DB_URL,
   },
 });

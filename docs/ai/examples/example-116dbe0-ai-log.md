@@ -95,14 +95,14 @@ End of transcript.
 
 ## Unified diff
 
-```diff
+````diff
 diff --git a/docs/ai/README.md b/docs/ai/README.md
 index 4ed4492..99afaf5 100644
 --- a/docs/ai/README.md
 +++ b/docs/ai/README.md
 @@ -21,3 +21,35 @@ Conventions
  - Branch name template (when human applies changes): `ai/<issue>-short-desc`.
- 
+
  If you are unsure about scope or any change touches `infrastructure/`, CI, or secrets, require a human review first.
 +
 +Saving agent runs (automation)
@@ -142,7 +142,7 @@ index 538f47f..726c359 100644
 +++ b/docs/ai/templates/agent-instructions.md
 @@ -41,3 +41,28 @@ This file describes what an AI agent is allowed to do and how it should report r
  7. Confidence threshold
- 
+
  - If any test fails after the proposed fix or if the change touches forbidden paths, return for human review.
 +
 +8. Archive run artifacts (optional)
@@ -178,9 +178,9 @@ index f9fad80..b05fdcc 100644
  - **Risk & rollback**: How to revert, DB migration note, and expected migration path.
  - **Estimate & priority**: Small/medium/large + priority tag.
 +- **Archive**: Whether to save the transcript and output artifacts.
- 
+
  Example
- 
+
 @@ -24,3 +25,4 @@ Example
  - **Repro steps**: `bun --filter ./apps/api test -- -t "create card"`
  - **Scope**: `apps/api/**`, `packages/database/**`
@@ -201,7 +201,7 @@ index dbc09e4..08234a3 100644
    "private": true,
    "devDependencies": {
      "@types/bun": "latest"
-```
+````
 
 ## Human review notes
 
@@ -209,6 +209,7 @@ index dbc09e4..08234a3 100644
 - Approved:
 
 ## QandA
+
 I'll create a concise TODO plan for adopting an AI-agent workflow in this repo.
 
 Created 10 todos
@@ -216,10 +217,12 @@ Created 10 todos
 Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete templates and where to put them.
 
 **Overview**
+
 - **Goal:** Move from ad-hoc one-line prompts to reproducible, verifiable AI tasks that an agent can complete and you can review.
 - **Benefits:** faster, safer automation; smaller, testable PRs; consistent prompt hygiene; easier audits and rollbacks.
 
 **Core principles**
+
 - **Small, scoped tasks:** Prefer single-responsibility tasks (one bugfix, one feature, one doc).
 - **Deterministic outputs:** Require the agent to produce code + tests + verification commands.
 - **Explicit context:** Always include commit SHA, relevant files, and test commands.
@@ -227,12 +230,14 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Guardrails:** Limit permissions, avoid secrets, require human approval for risky changes.
 
 **Where to keep files**
+
 - **Repo docs:** Put human-readable guides under `docs/ai/` (create this directory).
 - **Templates:** Keep prompt and task templates in `docs/ai/templates/`.
 - **Examples:** Store example interactions and accepted PR diffs in `docs/ai/examples/`.
 - **Automation:** Add CI/validation workflows under `.github/workflows/ai-validation.yml` (optional).
 
 **Recommended markdown files (what to create)**
+
 - **AI workflow overview:** docs/ai/README.md — short process, who approves, and quickstart.
 - **Prompt templates:** docs/ai/templates/prompt-template.md — canonical fields for agent prompts.
 - **Task spec template:** docs/ai/templates/task-spec.md — the long-form issue template for AI tasks.
@@ -243,6 +248,7 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Security & privacy:** docs/ai/security.md — data handling, secrets, and review rules.
 
 **Fields to include in a prompt-template (minimal required)**
+
 - **Title:** one-line summary.
 - **Goal:** measurable outcome (e.g., "Add validation to X so tests pass and CLI returns exit code 0").
 - **Background:** 2–3 short bullets of context or links to design notes.
@@ -254,6 +260,7 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Human checks:** what reviewer must verify before merge.
 
 **Task-spec template (what goes into an AI task or issue)**
+
 - **Problem statement:** one paragraph describing the user-visible problem.
 - **Why it matters:** 1–2 lines of impact.
 - **Acceptance criteria:** numbered, testable items (e.g., "1) `pnpm test` passes; 2) new unit covers X with 95% clarity").
@@ -263,6 +270,7 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Estimate & priority:** small/medium/large + priority.
 
 **Agent-instructions template (what you give to the AI agent)**
+
 - **High-level mission:** why this task exists.
 - **Step plan:** explicit ordered steps the agent should attempt (e.g., "1. run tests; 2. run grep for foo; 3. implement fix; 4. add tests; 5. run tests again; 6. produce patch").
 - **Allowed tools:** list of local commands and scripts allowed.
@@ -272,6 +280,7 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Confidence threshold:** when to return for human review (e.g., if any test fails or >5 changed files).
 
 **Suggested workflow (how a human + agent will use these files)**
+
 - **1) Create task:** Open an issue from `docs/ai/templates/task-spec.md`.
 - **2) Collect context:** Attach failing test output, relevant file list, and commit SHA.
 - **3) Run an agent:** Provide the `prompt-template.md` + `agent-instructions.md` + context to the AI assistant.
@@ -281,16 +290,19 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **7) Merge & monitor:** Merge after approval and monitor for regressions.
 
 **CI & automation recommendations**
+
 - **Validate PRs:** Add `.github/workflows/ai-validation.yml` that runs `pnpm test`, `pnpm lint`, and a small smoke check on PRs authored by agents.
 - **PR meta-check:** Fail if agent PR changes more than N files or touches forbidden paths.
 - **Bot label automation:** Auto-label `ai-generated` and require at least one human approval for that label.
 
 **Guardrails & compliance**
+
 - **Secrets:** Agents must never receive secret values; use placeholders.
 - **Scope limits:** Disallow edits to infra, deployment, or credentials by default.
 - **Audit trail:** Keep conversation + final prompt + agent output in `docs/ai/examples/` for audits.
 
 **Short example: minimal prompt-template (summary)**
+
 - **Title:** Fix failing tests for cards queries
 - **Goal:** Make `pnpm test` pass for database on main.
 - **Scope:** packages/database/**, packages/config/**
@@ -299,22 +311,21 @@ Progress: Planned 10 steps for an AI-agent workflow; next I'll outline concrete 
 - **Output:** Patch with changes + tests + changelog entry.
 
 **Next steps (pick one)**
+
 - **Scaffold files now:** I can create the `docs/ai/` templates and an example task in this repo.
 - **Workshop one template:** I can draft the `prompt-template.md` and `task-spec.md` for review.
 - **Help integrate CI:** I can draft the `ai-validation.yml` for workflows.
 
 Which would you like me to do next?
 
-
-
-
 Elaborate on how I would pass this information to the ai. For example Would this I create new files based on the templates with the information you populated? Something else? Where would these files generally go?
 
+**How to pass tasks to the AI (short answer)**
 
-**How to pass tasks to the AI (short answer)**  
 - Best practice: create a filled task from the templates and give that (plus minimal context) to the agent. Store the filled task in the repo (or paste it into the issue/assistant UI) and keep the transcript + patch in examples for audit.
 
 **Step-by-step workflow**
+
 - **Create the task**: Fill task-spec.md or prompt-template.md with Title, Goal, Scope, Constraints, Acceptance criteria, and exact commands to run. (Example file: prompt-template.md)
 - **Collect context**: Run the commands in context-capture.md and attach only the minimal failing test logs and relevant file snippets. Include the short commit SHA. (Guide: context-capture.md)
 - **Where to place files**: save the filled task as a repo file under `docs/ai/proposals/<issue>-task.md` (or a new issue body). Keep agent logs in `docs/ai/examples/<issue>-ai-log.md`. Use ai-log-template.md as the record format. (examples)
@@ -329,20 +340,19 @@ Elaborate on how I would pass this information to the ai. For example Would this
   - Redact secrets — never include tokens.
 
 **After the AI returns**
+
 - Save the transcript + diff to `docs/ai/examples/<issue>-ai-log.md`.
 - Human applies/inspects the patch, runs the verification commands (examples):
+
 ```bash
 bun install
 bun run lint
 bun --filter ./apps/web dev
 ```
+
 - Open a PR with the agent-provided PR draft, mark it `ai-generated`, require human review.
 
 Would you like me to create a sample filled file for the worked example at `docs/ai/proposals/select-card-by-id.md` now?
-
-
-
-
 
 What additional automation is typical in agentic ai forward workflows?
 
@@ -350,43 +360,51 @@ What additional automation is typical in agentic ai forward workflows?
 Concrete automations make agentic workflows safe, repeatable, and fast. Below are the typical automations teams add, grouped by priority.
 
 **Essential automations**
-- **Context capture**: Auto-collect commit SHA, failing-test output, and file list and attach them to the task (see context-capture.md).  
-- **Preflight checks**: Run `bun install`, `bun run lint`, `bun run test` (or package-scoped tests) before accepting an agent patch.  
-- **Archive provenance**: Auto-save prompt + transcript + diff to ai using the script (save-ai-log.js) or `bun run ai:save-log`.  
-- **Patch sanity check**: Run `git apply --check patch.diff`, static type checks, and formatting (`bun run format`) before applying.  
+
+- **Context capture**: Auto-collect commit SHA, failing-test output, and file list and attach them to the task (see context-capture.md).
+- **Preflight checks**: Run `bun install`, `bun run lint`, `bun run test` (or package-scoped tests) before accepting an agent patch.
+- **Archive provenance**: Auto-save prompt + transcript + diff to ai using the script (save-ai-log.js) or `bun run ai:save-log`.
+- **Patch sanity check**: Run `git apply --check patch.diff`, static type checks, and formatting (`bun run format`) before applying.
 - **Change-size guardrail**: Block or require human review if >N files or touching forbidden paths.
 
 **CI / PR automation**
-- **ai-validation CI**: A workflow that runs preflight checks for PRs labeled `ai-generated`, enforces forbidden-path blocking, and requires at least one human approval.  
-- **Auto-PR/labels**: Bot drafts PRs from agent patches, adds `ai-generated` and `needs-review` labels, and posts verification summary.  
+
+- **ai-validation CI**: A workflow that runs preflight checks for PRs labeled `ai-generated`, enforces forbidden-path blocking, and requires at least one human approval.
+- **Auto-PR/labels**: Bot drafts PRs from agent patches, adds `ai-generated` and `needs-review` labels, and posts verification summary.
 - **Auto-checks on merge**: Prevent merges that fail tests or security scans.
 
 **Security / compliance**
-- **Secret scanning**: Run `gitleaks`/`truffleHog` on agent outputs and logs (fail if secrets found).  
-- **Dependency scanning & SCA**: Run vulnerability scans on dependency changes (Snyk/Dependabot-equivalent).  
+
+- **Secret scanning**: Run `gitleaks`/`truffleHog` on agent outputs and logs (fail if secrets found).
+- **Dependency scanning & SCA**: Run vulnerability scans on dependency changes (Snyk/Dependabot-equivalent).
 - **SAST/fast SCA**: Integrate quick static analysis for risky changes.
 
 **Observability, deploy & rollback**
-- **Ephemeral test environments**: Spin up ephemeral DB/dev server for integration tests on large changes.  
-- **Smoke deploys**: Run a canary/smoke test in staging for UI or API changes.  
+
+- **Ephemeral test environments**: Spin up ephemeral DB/dev server for integration tests on large changes.
+- **Smoke deploys**: Run a canary/smoke test in staging for UI or API changes.
 - **Auto-rollback hooks**: If smoke tests fail, automatically revert and notify owners.
 
 **Developer ergonomics / integrations**
-- **CLI wrappers**: `scripts/ai/create-prompt` + `scripts/ai/save-ai-log` to create and archive artifacts locally.  
-- **IDE snippets**: Templates to create filled prompts from current editor context.  
+
+- **CLI wrappers**: `scripts/ai/create-prompt` + `scripts/ai/save-ai-log` to create and archive artifacts locally.
+- **IDE snippets**: Templates to create filled prompts from current editor context.
 - **Human-in-loop prompts**: Staged approval steps surfaced in PR checklist and a Slack/Teams notification flow.
 
 **Advanced / orchestration**
-- **Agent orchestration**: Multi-agent pipelines (one agent writes code, one runs tests, one produces PR notes).  
-- **Automated changelogs & release notes**: Generate changelog entries from diffs and attach to PR.  
+
+- **Agent orchestration**: Multi-agent pipelines (one agent writes code, one runs tests, one produces PR notes).
+- **Automated changelogs & release notes**: Generate changelog entries from diffs and attach to PR.
 - **Audit indexing**: Index logs + diffs for searchable audit (Elastic/SQLite index).
 
 **Concrete small next steps you can add immediately**
-- Add a CI workflow `.github/workflows/ai-validation.yml` to run `bun run lint` + `bun run test` on `ai-generated` PRs.  
-- Add a pre-apply script to run `git apply --check` and `bun run test` on `patch.diff`.  
+
+- Add a CI workflow `.github/workflows/ai-validation.yml` to run `bun run lint` + `bun run test` on `ai-generated` PRs.
+- Add a pre-apply script to run `git apply --check` and `bun run test` on `patch.diff`.
 - Wire save-ai-log.js into your agent pipeline to auto-save artifacts.
 
 Quick example: save a run locally
+
 ```bash
 node scripts/ai/save-ai-log.js --issue 123 --title "Select card by id" \
   --prompt-file ./tmp/prompt.md --transcript-file ./tmp/transcript.txt \
@@ -396,36 +414,30 @@ node scripts/ai/save-ai-log.js --issue 123 --title "Select card by id" \
 
 If you want, I can scaffold `.github/workflows/ai-validation.yml` next or add a small pre-apply script that enforces change-size and forbidden-path checks. Which should I do?
 
-
-
-
-
-
-
-
-
 Explain how, when and where context-capture.md fits into the workflow. Include if/how I would invoke it.
-
-
 
 I'll show when to run context-capture.md, what it collects, exactly how to invoke it, and where to store the outputs.
 
 **When To Run**
-- **Before creating a task/issue:** capture the exact failing state so an agent can reproduce it.  
-- **Before sending to the AI:** include these artifacts with the prompt so the agent can run the same commands.  
-- **After an agent attempt fails:** rerun to capture new failures and updated logs.  
+
+- **Before creating a task/issue:** capture the exact failing state so an agent can reproduce it.
+- **Before sending to the AI:** include these artifacts with the prompt so the agent can run the same commands.
+- **After an agent attempt fails:** rerun to capture new failures and updated logs.
 - **Before accepting/applying a patch:** record the baseline commit SHA and test outputs.
 
 **What To Capture**
-- **Commit SHA:** reproducible baseline (`git rev-parse --short HEAD`).  
-- **Failing test output:** full failing trace(s) for the package(s) involved.  
-- **Exact commands:** the precise commands to reproduce and verify (lint, unit, package filters).  
-- **Files list / diff:** affected files (`git diff --name-only origin/main...HEAD`) or a small explicit glob.  
-- **Minimal repro:** small script or sample input that reproduces the issue.  
+
+- **Commit SHA:** reproducible baseline (`git rev-parse --short HEAD`).
+- **Failing test output:** full failing trace(s) for the package(s) involved.
+- **Exact commands:** the precise commands to reproduce and verify (lint, unit, package filters).
+- **Files list / diff:** affected files (`git diff --name-only origin/main...HEAD`) or a small explicit glob.
+- **Minimal repro:** small script or sample input that reproduces the issue.
 - **Environment notes:** Bun/node version, OS, and any redacted env vars required.
 
 **How to invoke (commands — run in repo root)**
+
 - Quick capture (copies to `tmp/` files you can attach):
+
 ```bash
 git rev-parse --short HEAD > tmp/commit.txt
 
@@ -441,27 +453,33 @@ bun run test > tmp/workspace-tests.txt 2>&1 || true
 # capture a targeted failing test (example)
 bun --filter ./apps/api test -- -t "create card" > tmp/api-fail.txt 2>&1 || true
 ```
+
 - Create a minimal repro file if needed (example `tmp/repro.sh`) and record exact `bun`/shell commands used.
 
 **Where to save / attach**
-- **Issue or prompt:** paste small outputs or attach the `tmp/*.txt` files to the issue or chat thread.  
-- **Repo (optional):** save as `docs/ai/proposals/<issue>-context.md` or add the `tmp/*` files into a `docs/ai/proposals/<issue>/` folder for reproducibility.  
+
+- **Issue or prompt:** paste small outputs or attach the `tmp/*.txt` files to the issue or chat thread.
+- **Repo (optional):** save as `docs/ai/proposals/<issue>-context.md` or add the `tmp/*` files into a `docs/ai/proposals/<issue>/` folder for reproducibility.
 - **Archive step:** after an agent run you can use the save tool (save-ai-log.js) or the VS Code task (`Tasks: Run Task → Save AI run log`) to create a canonical `docs/ai/example-<issue>-ai-log.md`.
 
 **How to include these in the agent input**
+
 - Use the `prompt-template` fields: include `Commit SHA`, `Commands to run`, `Scope/Files`, and paste a short failing trace inline. For long outputs, say “see attached file: `docs/ai/proposals/<issue>-context.md`” and include the path. Reference the exact verification commands the agent should run. See prompt-template.md.
 
 **VS Code ergonomics**
-- Run the commands in the integrated terminal and save outputs to `tmp/` as shown.  
+
+- Run the commands in the integrated terminal and save outputs to `tmp/` as shown.
 - Use the existing VS Code task `Save AI run log` to archive artifacts after a run (Command Palette → `Tasks: Run Task` → `Save AI run log`). That task runs save-ai-log.js to write `docs/ai/example-<issue>-ai-log.md`.
 
 **Practical checklist before sending to the AI**
-- **Commit SHA:** recorded.  
-- **Commands:** exact commands included in the prompt.  
-- **Failing output:** full trace saved (or pasted) and trimmed to relevant parts.  
-- **Files list:** changed files or target globs included.  
+
+- **Commit SHA:** recorded.
+- **Commands:** exact commands included in the prompt.
+- **Failing output:** full trace saved (or pasted) and trimmed to relevant parts.
+- **Files list:** changed files or target globs included.
 - **Secrets:** redacted or omitted.
 
 If you want, I can:
+
 - Add a ready-made VS Code task that runs the capture commands and writes the `tmp/` files automatically, or
 - Create a small `docs/ai/proposals/<issue>-context.md` template generator you can invoke from the terminal. Which would you prefer?
