@@ -3,11 +3,24 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "ai:save-log": "node ./scripts/ai/save-ai-log.js"
+    "ai:save-log": "node ./scripts/ai/save-ai-log.js",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint --config eslint.config.ts .",
+    "lint:fix": "eslint --config eslint.config.ts . --fix"
   },
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@eslint/config-array": "^0.23.5",
+    "@types/bun": "latest",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "prettier": "^3.8.3",
+    "typescript-eslint": "^8.60.0"
   },
   "peerDependencies": {
     "typescript": "^5"
