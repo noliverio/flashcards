@@ -1,18 +1,18 @@
-import { type iCategoryType } from "../lib/types"
-import { createCategory } from "../lib/api-queries"
+import { type iCategoryType } from "../lib/types";
+import { createCategory } from "../lib/api-queries";
 
 export function NewCategoryForm() {
-  function formHandler(formData:FormData){
-    const name = formData.get("name")
-    const newCategory: iCategoryType = {category_name:name}
-    createCategory(newCategory)
+  function formHandler(formData: FormData) {
+    const name = formData.get("name");
+    const newCategory: iCategoryType = { category_name: name };
+    createCategory(newCategory);
   }
 
-  return(
+  return (
     <>
-    <form action={formHandler}>
-      <input type="text" name="name"/>
-    </form>
+      <form action={formHandler}>
+        <input type="text" name="name" />
+      </form>
     </>
-  )
+  );
 }

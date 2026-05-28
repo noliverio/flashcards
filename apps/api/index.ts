@@ -1,98 +1,119 @@
-import { zValidator } from "@hono/zod-validator"
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { insertCardSchema, insertCategorySchema } from "@flashcards/database/schema";
-import { getCardByID, createNewCard, deleteCard, deleteCategory, listCategories } from "@flashcards/database/queries"
-import { getCategoryByID, createNewCategory } from "@flashcards/database/queries"
-import { z } from "zod"
+import {
+  insertCardSchema,
+  insertCategorySchema,
+} from "@flashcards/database/schema";
+import {
+  getCardByID,
+  createNewCard,
+  deleteCard,
+  deleteCategory,
+  listCategories,
+} from "@flashcards/database/queries";
+import {
+  getCategoryByID,
+  createNewCategory,
+} from "@flashcards/database/queries";
+import { z } from "zod";
 import { httpInstrumentationMiddleware } from "@hono/otel";
 
-
 const createCardPublicSchema = insertCardSchema.omit({
-    use_history: true,
-    next_session: true
-})
+  use_history: true,
+  next_session: true,
+});
 
-const webappAddress = "http://localhost:8080"
+const webappAddress = "http://localhost:8080";
 
-type createCardInput = z.infer<typeof createCardPublicSchema>
+type createCardInput = z.infer<typeof createCardPublicSchema>;
 
-const app = new Hono()
-app.use(cors({origin: webappAddress}))
-app.use(httpInstrumentationMiddleware({serviceName:"flashcards-api", serviceVersion: "0.0.1", captureRequestHeaders: ["user-agent", "service-name"]}))
+const app = new Hono();
+app.use(cors({ origin: webappAddress }));
+app.use(
+  httpInstrumentationMiddleware({
+    serviceName: "flashcards-api",
+    serviceVersion: "0.0.1",
+    captureRequestHeaders: ["user-agent", "service-name"],
+  }),
+);
 
 // // // // // // //
 // GET ENDPOINTS  //
 // // // // // // //
 
-app.get('/', (c) => c.json({message:'Hello Bun!'}))
+app.get("/", (c) => c.json({ message: "Hello Bun!" }));
 
-app.get("/api/v1/card/:cardId", async (c) =>{
-    // TODO: return an error if the card does not exist
-    // console.log(c.req.param("cardId"))
-    try{
-        const cardID = z.coerce.number().parse(c.req.param("cardId"))
-        const card = await getCardByID(cardID)
-        return c.json(card)
-    } catch (e){
-        return c.json({}, 500)
-    }
-})
+app.get("/api/v1/card/:cardId", async (c) => {
+  // TODO: return an error if the card does not exist
+  // console.log(c.req.param("cardId"))
+  try {
+    const cardID = z.coerce.number().parse(c.req.param("cardId"));
+    const card = await getCardByID(cardID);
+    return c.json(card);
+  } catch (e) {
+    return c.json({}, 500);
+  }
+});
 
 app.get("/api/v1/categories", async (c) => {
-    try{
-        const categories = await listCategories()
-        return c.json(categories)
-    } catch (e){
-        return c.json({}, 500)
-    }
-})
+  try {
+    const categories = await listCategories();
+    return c.json(categories);
+  } catch (e) {
+    return c.json({}, 500);
+  }
+});
 
-app.get("/api/v1/category/:categoryId", async (c)=>{
-    const categoryId = z.coerce.number().parse(c.req.param("categoryId"))
-    const category = await getCategoryByID(categoryId)
-    return c.json(category)  
-})
-
+app.get("/api/v1/category/:categoryId", async (c) => {
+  const categoryId = z.coerce.number().parse(c.req.param("categoryId"));
+  const category = await getCategoryByID(categoryId);
+  return c.json(category);
+});
 
 // // // // // // //
 // POST ENDPOINTS //
 // // // // // // //
 
-
-app.post("/api/v1/card", zValidator("json", createCardPublicSchema), async (c) => {
-    const validatedInput = c.req.valid("json")
+app.post(
+  "/api/v1/card",
+  zValidator("json", createCardPublicSchema),
+  async (c) => {
+    const validatedInput = c.req.valid("json");
     const newCard = insertCardSchema.parse({
-        ...validatedInput,
-        use_history: {uses:[]},
-        next_session: 0
-    })
-    const result = await createNewCard(newCard)
-    return c.json({success:true, card: result[0]})
-})
+      ...validatedInput,
+      use_history: { uses: [] },
+      next_session: 0,
+    });
+    const result = await createNewCard(newCard);
+    return c.json({ success: true, card: result[0] });
+  },
+);
 
-app.post("/api/v1/category", zValidator("json", insertCategorySchema), async (c) => {
-    const validatedInput = c.req.valid("json")
-    const result = await createNewCategory(validatedInput)
-    return c.json({success:true, card: result[0]})
-})
-
+app.post(
+  "/api/v1/category",
+  zValidator("json", insertCategorySchema),
+  async (c) => {
+    const validatedInput = c.req.valid("json");
+    const result = await createNewCategory(validatedInput);
+    return c.json({ success: true, card: result[0] });
+  },
+);
 
 // // // // // // // //
 //  DELETE ENDPOINTS //
 // // // // // // // //
 
+app.delete("/api/v1/card/:cardID", async (c) => {
+  const cardId = z.number().parse(c.req.param("cardID"));
+  const result = await deleteCard(cardId);
+  return c.json(result);
+});
 
-app.delete("/api/v1/card/:cardID", async (c)=>{
-    const cardId = z.number().parse(c.req.param("cardID"))
-    const result = await deleteCard(cardId)
-    return c.json(result)
-})
+app.delete("/api/v1/category/:categoryID", async (c) => {
+  const categoryId = z.number().parse(c.req.param("categoryID"));
+  const result = await deleteCategory(categoryId);
+  return c.json(result);
+});
 
-app.delete("/api/v1/category/:categoryID", async (c)=>{
-    const categoryId = z.number().parse(c.req.param("categoryID"))
-    const result = await deleteCategory(categoryId)
-    return c.json(result)
-})
-
-export default app
+export default app;

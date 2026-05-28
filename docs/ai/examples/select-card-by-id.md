@@ -3,21 +3,25 @@
 This worked example demonstrates an end-to-end AI-agent workflow for the task: "Add the option to select a card by `cardID` in the web interface." It includes the filled task spec/prompt to send to an agent, the commands to run, the files the agent should change, and a suggested patch the agent might produce.
 
 Overview
+
 - Goal: Let users enter a `cardID` in the web UI and load the matching card from the API.
 - Why: The app currently always loads card `1` on startup — this change allows quick navigation to arbitrary cards by id.
 
 Files that should be edited (scope)
+
 - `apps/web/src/App.tsx` — Add an input and a fetch button and wire it to `getCard(cardID)`.
 - `apps/web/src/lib/api-queries.ts` — Verify `getCard(cardID: number)` exists and behaves correctly (this repo already has it).
 - `apps/web/src/ui/card.tsx` — No change required for basic behavior, but the agent should update if necessary for robustness.
 
 Acceptance criteria (binary, testable)
+
 1. The web UI shows an input labeled "Card ID" and a button "Fetch".
 2. Entering a positive integer (e.g. `2`) and clicking "Fetch" calls the backend and displays that card via `CardUI`.
 3. No changes are made to `infrastructure/`, `.github/workflows/`, or other forbidden paths.
 4. `bun run lint` exits 0 and the workspace builds.
 
 Commands to collect context (copy into the issue)
+
 ```bash
 # current commit
 git rev-parse --short HEAD
@@ -37,36 +41,36 @@ From `apps/web/src/lib/api-queries.ts`:
 
 ```ts
 export async function getCard(cardID: number) {
-    const path = `${baseAPIPath}/api/v1/card/${cardID}`
-    const resp = await fetch(path)
-    const cardJSON = await resp.json()
-    if (( 300 <= resp.status) || (resp.status <= 199)){
-        // TODO replace magic numbers
-        return
-    }
-    const card = selectCardSchema.parse(cardJSON)
-    return card
+  const path = `${baseAPIPath}/api/v1/card/${cardID}`;
+  const resp = await fetch(path);
+  const cardJSON = await resp.json();
+  if (300 <= resp.status || resp.status <= 199) {
+    // TODO replace magic numbers
+    return;
+  }
+  const card = selectCardSchema.parse(cardJSON);
+  return card;
 }
 ```
 
 From `apps/web/src/App.tsx` (current behavior—the agent should see this):
 
 ```ts
-  useEffect(()=>{
-    async function _ (){
-      const eCard = await getCard(1)
-      
-      if (! ignore) { 
-        setCard(eCard)
-      }
-    }
+useEffect(() => {
+  async function _() {
+    const eCard = await getCard(1);
 
-    let ignore = false
-    _()
-    return ()=>{
-      ignore = true
+    if (!ignore) {
+      setCard(eCard);
     }
-  }, [])
+  }
+
+  let ignore = false;
+  _();
+  return () => {
+    ignore = true;
+  };
+}, []);
 ```
 
 Filled task-spec (paste into a new issue using `docs/ai/templates/task-spec.md`)
@@ -101,6 +105,7 @@ Filled agent prompt (use `docs/ai/templates/prompt-template.md` fields)
 Agent instructions (attach `docs/ai/templates/agent-instructions.md` too)
 
 Use the agent-instructions template but emphasize:
+
 - Step plan: 1) run lint; 2) inspect `App.tsx`; 3) implement input + handler; 4) add minimal unit test if present; 5) run lint again and produce a unified diff.
 - If more than 8 changed files are required, stop and return for human review.
 
@@ -113,8 +118,8 @@ The following is an example of the minimal changes the agent should produce. Thi
  -  useEffect(()=>{
  -    async function _ (){
  -      const eCard = await getCard(1)
- -      
- -      if (! ignore) { 
+ -
+ -      if (! ignore) {
  -        setCard(eCard)
  -      }
  -    }
@@ -169,6 +174,7 @@ The following is an example of the minimal changes the agent should produce. Thi
 ```
 
 How to run and verify after receiving the agent patch
+
 1. Save the agent's unified diff to `patch.diff`.
 2. Inspect the changed files listed by the agent for correctness.
 3. Apply the patch locally (human applies it):
@@ -185,8 +191,10 @@ bun --filter ./apps/web dev
 5. If everything passes, create a human-authored branch and commit using the commit message convention: `ai: add cardID selector (#<issue>)` and open a PR with the agent's PR body.
 
 Recording the run
+
 - Save the original prompt, the agent transcript, the produced patch, and verification results to `docs/ai/examples/<issue>-ai-log.md` using `ai-log-template.md`.
 
 Notes and extension ideas
+
 - Add unit or integration tests that mock `getCard` to verify the UI behavior.
 - Add validation UI for invalid ids and helpful error messages from errors returned by `getCard`.
