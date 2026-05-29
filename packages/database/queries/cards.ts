@@ -1,6 +1,9 @@
-import { db } from "..";
-// import { desc } from "drizzle-orm";
+import opentelemetry from "@opentelemetry/api";
+import { type Span } from "@opentelemetry/api";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+
+import { db } from "..";
 import {
   selectCardSchema,
   insertCardSchema,
@@ -8,9 +11,6 @@ import {
   insertCategorySchema,
 } from "../schema";
 import { cards, categories } from "../schema";
-import { z } from "zod";
-import opentelemetry from "@opentelemetry/api";
-import { trace, type Span } from "@opentelemetry/api";
 
 const tracer = opentelemetry.trace.getTracer("flashcard-db-lib", "0.0.1");
 

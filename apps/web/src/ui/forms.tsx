@@ -1,5 +1,5 @@
-import { type iCategoryType } from "../lib/types";
 import { createCategory } from "../lib/api-queries";
+import { type iCategoryType } from "../lib/types";
 
 export function NewCategoryForm() {
   function formHandler(formData: FormData) {

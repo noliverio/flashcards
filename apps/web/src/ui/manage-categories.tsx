@@ -1,6 +1,7 @@
-import { Button } from "./button";
 import { selectCategorySchema } from "@flashcards/database/schema";
 import { z } from "zod";
+
+import { Button } from "./button";
 
 type Category = z.infer<typeof selectCategorySchema>;
 

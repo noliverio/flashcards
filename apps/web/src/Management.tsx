@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
+
+import { getCategories } from "./lib/api-queries.ts";
+import { selCards } from "./lib/mocks.tsx";
+import { type sCategoryType } from "./lib/types.tsx";
 import { ManageCards } from "./ui/manage-cards";
 import { ManageCategory } from "./ui/manage-categories";
-import { selCards } from "./lib/mocks.tsx";
-import { getCategories } from "./lib/api-queries.ts";
-import { useEffect, useState } from "react";
-import { type sCategoryType } from "./lib/types.tsx";
 
 export default function Management({ onClose }: { onClose?: () => void }) {
   const [categories, setCategories] = useState<sCategoryType[] | undefined>();

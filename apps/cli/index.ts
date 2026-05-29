@@ -1,8 +1,8 @@
 import { Command } from "commander";
-
-import type { Config } from "./types";
 import { homedir } from "node:os";
 import { join } from "node:path";
+
+import type { Config } from "./types";
 
 const program = new Command();
 
@@ -48,7 +48,7 @@ async function validateAPIConnectivity() {
       return false;
     }
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

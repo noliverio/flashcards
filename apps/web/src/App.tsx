@@ -1,9 +1,10 @@
-import CardUI from "./ui/card";
+import { useEffect, useState } from "react";
+
 import "./App.css";
 import { getCard } from "./lib/api-queries";
-import { useEffect, useState } from "react";
 import { type sCardType } from "./lib/types";
 import Management from "./Management";
+import CardUI from "./ui/card";
 
 export function App() {
   const [card, setCard] = useState<sCardType | undefined>();

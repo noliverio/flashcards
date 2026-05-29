@@ -1,10 +1,3 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import {
-  insertCardSchema,
-  insertCategorySchema,
-} from "@flashcards/database/schema";
 import {
   getCardByID,
   createNewCard,
@@ -16,8 +9,15 @@ import {
   getCategoryByID,
   createNewCategory,
 } from "@flashcards/database/queries";
-import { z } from "zod";
+import {
+  insertCardSchema,
+  insertCategorySchema,
+} from "@flashcards/database/schema";
 import { httpInstrumentationMiddleware } from "@hono/otel";
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { z } from "zod";
 
 const createCardPublicSchema = insertCardSchema.omit({
   use_history: true,
@@ -25,8 +25,6 @@ const createCardPublicSchema = insertCardSchema.omit({
 });
 
 const webappAddress = "http://localhost:8080";
-
-type createCardInput = z.infer<typeof createCardPublicSchema>;
 
 const app = new Hono();
 app.use(cors({ origin: webappAddress }));
@@ -52,7 +50,7 @@ app.get("/api/v1/card/:cardId", async (c) => {
     const card = await getCardByID(cardID);
     return c.json(card);
   } catch (e) {
-    return c.json({}, 500);
+    return c.json(e, 500);
   }
 });
 
@@ -61,7 +59,7 @@ app.get("/api/v1/categories", async (c) => {
     const categories = await listCategories();
     return c.json(categories);
   } catch (e) {
-    return c.json({}, 500);
+    return c.json(e, 500);
   }
 });
 

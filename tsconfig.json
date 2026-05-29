@@ -32,6 +32,8 @@
       "@packages/*": ["./packages/*"],
       "@apps/*": ["./apps/*"]
     }
+
+    // Other flags
   },
   "exclude": ["node_modules"]
 }

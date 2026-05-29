@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execSync } from "child_process";
 /**
  * Save AI run artifacts into docs/ai/example-<issue>-ai-log.md
  *
@@ -9,7 +10,6 @@
  */
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
 
 function usage() {
   console.log(
