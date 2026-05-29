@@ -2,7 +2,9 @@ import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
 import eslintConfigPrettier from "eslint-config-prettier";
-import type { Linter } from "eslint";
+import perfectionist from "eslint-plugin-perfectionist"
+// TODO: setup sec plugin
+// import  from "eslint-plugin-security"
 
 export default tseslint.config(
   {
@@ -63,4 +65,18 @@ export default tseslint.config(
     },
   },
   eslintConfigPrettier,
+  {
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      'perfectionist/sort-imports': [
+        'error',
+        {
+          type: 'natural',
+          order: 'asc',
+        },
+      ],
+    },
+  },
 );
