@@ -26,8 +26,6 @@ const createCardPublicSchema = insertCardSchema.omit({
 
 const webappAddress = "http://localhost:8080";
 
-type createCardInput = z.infer<typeof createCardPublicSchema>;
-
 const app = new Hono();
 app.use(cors({ origin: webappAddress }));
 app.use(
@@ -52,7 +50,7 @@ app.get("/api/v1/card/:cardId", async (c) => {
     const card = await getCardByID(cardID);
     return c.json(card);
   } catch (e) {
-    return c.json({}, 500);
+    return c.json(e, 500);
   }
 });
 
@@ -61,7 +59,7 @@ app.get("/api/v1/categories", async (c) => {
     const categories = await listCategories();
     return c.json(categories);
   } catch (e) {
-    return c.json({}, 500);
+    return c.json(e, 500);
   }
 });
 

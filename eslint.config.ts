@@ -2,7 +2,6 @@ import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
 import eslintConfigPrettier from "eslint-config-prettier";
-import type { Linter } from "eslint";
 
 export default tseslint.config(
   {
@@ -23,7 +22,10 @@ export default tseslint.config(
       },
     },
     rules: {
-      "no-console": "warn",
+      // "no-console": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-process-env": "off", //depracated rule
+      "no-unused-vars": "off", //required to use typescript-eslint version
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_" },
@@ -58,9 +60,7 @@ export default tseslint.config(
   },
   {
     files: ["packages/database/**/*.ts"],
-    rules: {
-      "no-process-env": "error",
-    },
+    rules: {},
   },
   eslintConfigPrettier,
 );

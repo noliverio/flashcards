@@ -48,7 +48,7 @@ async function validateAPIConnectivity() {
       return false;
     }
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

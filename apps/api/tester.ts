@@ -1,15 +1,10 @@
-import {
-  selectCardBaseSchema,
-  insertCardSchema,
-} from "@flashcards/database/schema";
-import { z } from "zod";
+import { selectCardBaseSchema } from "@flashcards/database/schema";
 
-const createCardPublicSchema = insertCardSchema.omit({
-  use_history: true,
-  next_session: true,
-});
-
-type createCardInput = z.infer<typeof createCardPublicSchema>;
+interface createCardInput {
+  question: string;
+  answer: string;
+  category_key: number;
+}
 
 const input: createCardInput = {
   question: "monēre",
@@ -26,7 +21,6 @@ const newCard = await fetch("localhost:3000/api/v1/card", {
   },
 });
 const unparsed: any = await newCard.json();
-// console.log(unparsed.card[0])
 const newCardJson = selectCardBaseSchema.parse(unparsed.card);
 console.log(newCardJson);
 const getURL = `localhost:3000/api/v1/card/${newCardJson.id}`;
