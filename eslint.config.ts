@@ -1,8 +1,8 @@
-import tseslint from "typescript-eslint";
-import reactPlugin from "eslint-plugin-react";
-import hooksPlugin from "eslint-plugin-react-hooks";
 import eslintConfigPrettier from "eslint-config-prettier";
 import perfectionist from "eslint-plugin-perfectionist"
+import reactPlugin from "eslint-plugin-react";
+import hooksPlugin from "eslint-plugin-react-hooks";
+import tseslint from "typescript-eslint";
 // TODO: setup sec plugin
 // import  from "eslint-plugin-security"
 
