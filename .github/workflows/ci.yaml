@@ -28,7 +28,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - name: test database package
-        run: | 
+        run: |
           cd packages/database
+          bun install
           bun test
           cd ../..
