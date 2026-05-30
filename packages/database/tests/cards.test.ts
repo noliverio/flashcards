@@ -157,8 +157,10 @@ describe("cards queries", () => {
     const result = await listCategories();
     expect(mockedDb.select).toHaveBeenCalled();
     // expect(result).toBeUndefined();
-    expect(result).toMatchObject([{ id: 1, category_name: "cat" },{ id: 2, category_name: "dog" }]);
-
+    expect(result).toMatchObject([
+      { id: 1, category_name: "cat" },
+      { id: 2, category_name: "dog" },
+    ]);
   });
 
   it("deleteCategory deletes related cards then deletes category and returns result", async () => {
