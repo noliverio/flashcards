@@ -135,11 +135,17 @@ describe("cards queries", () => {
     expect(result).toEqual(returning);
   });
 
-  it("listCategories queries categories and returns undefined (current implementation)", async () => {
+  it("listCategories queries categories and returns all categories", async () => {
     const mockList = [
       {
         id: 1,
         category_name: "cat",
+        session_number: 0,
+        last_play_date: "2020-01-01",
+      },
+      {
+        id: 2,
+        category_name: "dog",
         session_number: 0,
         last_play_date: "2020-01-01",
       },
@@ -150,7 +156,11 @@ describe("cards queries", () => {
 
     const result = await listCategories();
     expect(mockedDb.select).toHaveBeenCalled();
-    expect(result).toBeUndefined();
+    // expect(result).toBeUndefined();
+    expect(result).toMatchObject([
+      { id: 1, category_name: "cat" },
+      { id: 2, category_name: "dog" },
+    ]);
   });
 
   it("deleteCategory deletes related cards then deletes category and returns result", async () => {
