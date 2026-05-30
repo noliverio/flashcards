@@ -1,0 +1,20 @@
+name: CI
+on: [push]
+jobs:
+  ci:
+    name: linting
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: formatting check
+        run: |
+          bun install
+          bun format:check
+      - name: linting check
+        run: |
+          bun install
+          bun lint
