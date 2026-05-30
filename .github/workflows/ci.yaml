@@ -18,3 +18,17 @@ jobs:
         run: |
           bun install
           bun lint
+  tests:
+    name: testing
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: test database package
+        run: | 
+          cd packages/database
+          bun test
+          cd ../..
