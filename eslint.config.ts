@@ -1,5 +1,5 @@
 import eslintConfigPrettier from "eslint-config-prettier";
-import perfectionist from "eslint-plugin-perfectionist"
+import perfectionist from "eslint-plugin-perfectionist";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
@@ -71,11 +71,11 @@ export default tseslint.config(
       perfectionist,
     },
     rules: {
-      'perfectionist/sort-imports': [
-        'error',
+      "perfectionist/sort-imports": [
+        "error",
         {
-          type: 'natural',
-          order: 'asc',
+          type: "natural",
+          order: "asc",
         },
       ],
     },

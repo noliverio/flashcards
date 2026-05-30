@@ -1,0 +1,35 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  ci:
+    name: linting
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: formatting check
+        run: |
+          bun install
+          bun format:check
+      - name: linting check
+        run: |
+          bun install
+          bun lint
+  tests:
+    name: testing
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: test database package
+        run: |
+          cd packages/database
+          bun install
+          bun test
+          cd ../..
